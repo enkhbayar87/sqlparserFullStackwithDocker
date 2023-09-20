@@ -4,7 +4,7 @@ services:
     build:
       context: ./sqlparseBackEnd 
     environment:
-      MYSQL_HOST: db
+      MYSQL_HOST: mysqldb
       MYSQL_PORT: 3306
       MYSQL_DATABASE: expressjs
       MYSQL_USER: root
@@ -15,11 +15,11 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      - db
+      - mysqldb
     links:
-      - db
+      - mysqldb
 
-  db:
+  mysqldb:
     image: mysql:latest	
     environment:
       MYSQL_ROOT_PASSWORD: password
@@ -27,7 +27,7 @@ services:
     ports:
       - 3306:3306	
     volumes:
-      - db:/var/lib/mysql
+      - mysqldb:/var/lib/mysql
   frontend:
     build:
       context: ./sqlparseFrontEnd 
@@ -40,5 +40,5 @@ services:
     links:
       - app
 volumes:
-  db:
+  mysqldb:
     driver: local
