@@ -1,0 +1,44 @@
+version: "3"
+services:
+  app:
+    build:
+      context: ./sqlparseBackEnd 
+    environment:
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: expressjs
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_DIALECT: mysql
+      NODE_ENV: development
+      PORT: 3000 
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    links:
+      - db
+
+  db:
+    image: mysql:latest	
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: expressjs	
+    ports:
+      - 3306:3306	
+    volumes:
+      - db:/var/lib/mysql
+  frontend:
+    build:
+      context: ./sqlparseFrontEnd 
+    ports:
+      - 3001:3000 
+    environment:
+      - BACKEND_URL=http://localhost:3000
+    depends_on:
+      - app 
+    links:
+      - app
+volumes:
+  db:
+    driver: local
